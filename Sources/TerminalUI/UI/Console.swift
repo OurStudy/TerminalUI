@@ -1,8 +1,8 @@
 //
-//  TerminalUI.swift
+//  Console.swift
 //  TerminalUI
 //
-//  Created by fushujiong on 2023/5/20.
+//  Created by fushujiong on 2023/5/27.
 //
 //  Copyright (c) 2023 Fu Shujiong <9191apps@gmail.com>
 //
@@ -24,4 +24,27 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-public enum TerminalUI { }
+import Foundation
+
+public protocol ConsolePrintable {
+    func render(_ context: TerminalUI.Context) -> ANSIAttributedString
+}
+
+fileprivate func systemPrint(_ text: Any) {
+    print(text)
+}
+
+public extension TerminalUI {
+    class Console {
+        public let context: TerminalUI.Context
+        
+        public init() {
+            context = TerminalUI.Context()
+        }
+        
+        public func print(_ object: ConsolePrintable) {
+            let attributedString = object.render(context)
+            systemPrint(attributedString)
+        }
+    }
+}

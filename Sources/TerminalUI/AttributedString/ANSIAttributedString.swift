@@ -63,11 +63,18 @@ public class ANSIAttributedString: CustomStringConvertible {
         self.string = string
     }
     
+    public init(string: String, style: TextStyle) {
+        self.string = string
+        forgroundColor = style.foregroundColor
+        backgroundColor = style.backgroundColor
+        attributes = style.attributes
+    }
+    
     public var forgroundColor: ForegroundColor = .default
     
     public var backgroundColor: BackgroundColor = .default
     
-    public var textStyles: [TextStyle] = []
+    public var attributes: Set<TextAttribute> = []
     
     var needsResetToDefault: Bool = true
     
@@ -110,13 +117,15 @@ public class ANSIAttributedString: CustomStringConvertible {
         return self
     }
     
-    public func style(_ styles: TextStyle...) -> Self {
-        addStyles(styles)
+    public func attribute(_ attributes: TextAttribute...) -> Self {
+        addAttributes(attributes)
         return self
     }
     
-    private func addStyles(_ styles: [TextStyle]) {
-        textStyles.append(contentsOf: styles)
+    private func addAttributes(_ attributes: [TextAttribute]) {
+        self.attributes.forEach {
+            self.attributes.insert($0)
+        }
         
         if childAttributedStrings.isEmpty {
             return
@@ -124,11 +133,11 @@ public class ANSIAttributedString: CustomStringConvertible {
         childAttributedStrings = childAttributedStrings.map({
             switch $0 {
             case .attributed(let childString):
-                childString.addStyles(styles)
+                childString.addAttributes(attributes)
                 return .attributed(childString)
             case .plain(let childString):
                 let attributedString = ANSIAttributedString(string: childString)
-                attributedString.addStyles(styles)
+                attributedString.addAttributes(attributes)
                 return .attributed(attributedString)
             }
         })
@@ -140,13 +149,13 @@ public class ANSIAttributedString: CustomStringConvertible {
         if !_string.isEmpty{
             var description: String = ""
             description += "\u{001B}[\(forgroundColor.rawValue);\(backgroundColor.rawValue)"
-            textStyles.forEach {
+            attributes.forEach {
                 description += ";\($0.rawValue)"
             }
             description += "m"
             description += _string
             if needsResetToDefault {
-                description += "\u{001B}[\(TextStyle.default.rawValue)m"
+                description += "\u{001B}[\(TextAttribute.default.rawValue)m"
             }
             return description
         }

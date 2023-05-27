@@ -1,5 +1,5 @@
 //
-//  TerminalUI.swift
+//  TextAttribute.swift
 //  TerminalUI
 //
 //  Created by fushujiong on 2023/5/20.
@@ -24,4 +24,24 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-public enum TerminalUI { }
+public enum TextAttribute: UInt8 {
+    case `default`      = 0
+    case bold           = 1
+    case dim            = 2
+    case italic         = 3
+    case underline      = 4
+    case blink          = 5
+    case overline       = 6
+    case inverse        = 7 /// inverse foreground color and backgroud color
+    case hidden         = 8
+    case strike         = 9
+    case noBold         = 21
+    case noDim          = 22
+    case noItalic       = 23
+    case noUnderline    = 24
+    case noBlink        = 25
+    case noOverline     = 26
+    case noInverse      = 27
+    case noHidden       = 28
+    case noStrike       = 29
+}

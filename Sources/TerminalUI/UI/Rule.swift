@@ -1,5 +1,5 @@
 //
-//  TextStyle.swift
+//  Rule.swift
 //  TerminalUI
 //
 //  Created by fushujiong on 2023/5/27.
@@ -24,16 +24,31 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-import Foundation
-
-public struct TextStyle {
-    public var foregroundColor: ForegroundColor
-    public var backgroundColor: BackgroundColor
-    public var attributes: Set<TextAttribute>
+public struct Rule: ConsolePrintable {
+    public var title: String
+    public var characters: String
+    public var end: String
+    public var ruleLineStyle: TextStyle
+    public var titleStyle: TextStyle
     
-    public init(foregroundColor: ForegroundColor = .default, backgroundColor: BackgroundColor = .default, attributes: Set<TextAttribute> = []) {
-        self.foregroundColor = foregroundColor
-        self.backgroundColor = backgroundColor
-        self.attributes = attributes
+    public init(title: String,
+         characters: String = "-",
+         end: String = "\n",
+         ruleLineStyle: TextStyle = TextStyle(foregroundColor: .lightBlue),
+         titleStyle: TextStyle = TextStyle()
+    ) {
+        self.title = title
+        self.characters = characters
+        self.end = end
+        self.ruleLineStyle = ruleLineStyle
+        self.titleStyle = titleStyle
+    }
+    
+    public func render(_ context: TerminalUI.Context) -> ANSIAttributedString {
+        let sideWidth = (context.windowSize.width - title.cellWidth()) / 2
+        let left: String = characters * (sideWidth / characters.cellWidth() + 1)
+        let leftAttributedString = ANSIAttributedString(string: left, style: ruleLineStyle)
+        let midAttributedString = ANSIAttributedString(string: title, style: titleStyle)
+        return leftAttributedString + midAttributedString + leftAttributedString
     }
 }

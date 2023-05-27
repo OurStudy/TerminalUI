@@ -1,8 +1,8 @@
 //
-//  TerminalUI.swift
+//  Context.swift
 //  TerminalUI
 //
-//  Created by fushujiong on 2023/5/20.
+//  Created by fushujiong on 2023/5/27.
 //
 //  Copyright (c) 2023 Fu Shujiong <9191apps@gmail.com>
 //
@@ -24,4 +24,15 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-public enum TerminalUI { }
+public extension TerminalUI {
+    class Context {
+        let windowSize: TerminalUI.WindowSize
+        init() {
+            if let terminalSize = TerminalUI.getWindowSize() {
+                windowSize = terminalSize
+            } else {
+                windowSize = WindowSize(width: 100, height: 80)
+            }
+        }
+    }
+}

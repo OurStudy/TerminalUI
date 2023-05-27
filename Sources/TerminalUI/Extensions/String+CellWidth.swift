@@ -1,5 +1,5 @@
 //
-//  TerminalUI.swift
+//  String+CellWidth.swift
 //  TerminalUI
 //
 //  Created by fushujiong on 2023/5/20.
@@ -24,4 +24,15 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-public enum TerminalUI { }
+import Darwin.C
+
+public extension String {
+    func cellWidth() -> Int {
+        setlocale(LC_ALL, "")
+        let width = self.unicodeScalars.reduce(0) { partialResult, scalar in
+            let width = wcwidth(wchar_t(scalar.value))
+            return partialResult + Int(width)
+        }
+        return width
+    }
+}

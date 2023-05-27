@@ -1,8 +1,8 @@
 //
-//  TerminalUI.swift
+//  String+Multiply.swift
 //  TerminalUI
 //
-//  Created by fushujiong on 2023/5/20.
+//  Created by fushujiong on 2023/5/27.
 //
 //  Copyright (c) 2023 Fu Shujiong <9191apps@gmail.com>
 //
@@ -24,4 +24,32 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-public enum TerminalUI { }
+import Foundation
+
+public extension String {
+    static func * (lhs: String, rhs: Int) -> String {
+        guard rhs > 0 else {
+            return ""
+        }
+        
+        var result = ""
+        for _ in 1...rhs {
+            result += lhs
+        }
+        
+        return result
+    }
+    
+    static func * (lhs: Int, rhs: String) -> String {
+        guard lhs > 0 else {
+            return ""
+        }
+        
+        var result = ""
+        for _ in 1...lhs {
+            result += rhs
+        }
+        
+        return result
+    }
+}

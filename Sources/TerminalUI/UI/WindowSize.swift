@@ -1,8 +1,8 @@
 //
-//  String+AttributedString.swift
+//  WindowSize.swift
 //  TerminalUI
 //
-//  Created by fushujiong on 2023/5/20.
+//  Created by fushujiong on 2023/5/27.
 //
 //  Copyright (c) 2023 Fu Shujiong <9191apps@gmail.com>
 //
@@ -24,23 +24,20 @@
 //  OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN
 //  THE SOFTWARE.
 
-public extension String {
+import Darwin
+
+public extension TerminalUI {
     
-    func foregroundColor(_ color: ForegroundColor) -> ANSIAttributedString {
-        let attributedString = ANSIAttributedString(string: self)
-        attributedString.forgroundColor = color
-        return attributedString
+    struct WindowSize {
+        var width: Int
+        var height: Int
     }
     
-    func backgroundColor(_ color: BackgroundColor) -> ANSIAttributedString {
-        let attributedString = ANSIAttributedString(string: self)
-        attributedString.backgroundColor = color
-        return attributedString
-    }
-    
-    func style(_ styles: TextStyle...) -> ANSIAttributedString {
-        let attributedString = ANSIAttributedString(string: self)
-        attributedString.textStyles.append(contentsOf: styles)
-        return attributedString
+    static func getWindowSize() -> TerminalUI.WindowSize? {
+        var size = winsize()
+        guard ioctl(STDOUT_FILENO, TIOCGWINSZ, &size) != -1 else {
+            return nil
+        }
+        return TerminalUI.WindowSize(width: Int(size.ws_col), height: Int(size.ws_row))
     }
 }
